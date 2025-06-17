@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1383895868465479740/1384173198752612443/ChatGPT_Image_Jun_16_2025_04_07_45_PM.png?ex=6851773f&is=685025bf&hm=12270814ac77858f985c6dcc88c3d121b46f4399ec24b67ad6677d7bfc5896ff&">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DigitalHub Services</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; background: #121212; color: #eee;
+  }
+  header {
+    background: #202020;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  header .logo {
+    font-weight: 900;
+    font-size: 24px;
+    color: #4caf50;
+    user-select: none;
+    cursor: pointer;
+  }
+  nav ul {
+    list-style: none;
+    margin: 0; padding: 0; display: flex;
+  }
+  nav ul li {
+    position: relative;
+  }
+  nav ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: #eee;
+    text-decoration: none;
+    user-select: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  }
+  nav ul li:hover > a,
+  nav ul li a.active {
+    background: #4caf50;
+    color: #121212;
+  }
+  /* Dropdown */
+  nav ul li ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #303030;
+    display: none;
+    min-width: 180px;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 9999;
+  }
+  nav ul li:hover ul {
+    display: block;
+  }
+  nav ul li ul li a {
+    padding: 10px 15px;
+    color: #ccc;
+    font-size: 14px;
+  }
+  nav ul li ul li a:hover {
+    background: #4caf50;
+    color: #121212;
+  }
+  /* Carrito botón */
+  #carritoBtn {
+    cursor: pointer;
+    color: #eee;
+    position: relative;
+    font-size: 24px;
+  }
+  #carritoCantidad {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+  }
+  main {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #productosMasComprados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .producto {
+    background: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 12px #00000088;
+    transition: transform 0.3s ease;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .producto:hover {
+    transform: scale(1.03);
+  }
+  .producto-img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+  }
+  .producto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .producto .info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .producto .info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+  }
+  .producto .info .precio {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #4caf50;
+  }
+  .producto .info .descripcion {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 15px;
+    flex-grow: 1;
+  }
+  .producto .info button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+  }
+  .btnAñadir {
+    background: #2196f3;
+    color: white;
+  }
+  .btnAñadir:hover {
+    background: #0b7dda;
+  }
+  /* Carrito ventana */
+  #carritoVentana {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 320px;
+    max-height: 420px;
+    background: #222;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #000;
+    color: #eee;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10000;
+  }
+  #carritoVentana header {
+    padding: 15px;
+    font-weight: 700;
+    background: #4caf50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #carritoVentana header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  #carritoLista {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  #carritoLista .item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+  }
+  #carritoLista .item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  #carritoLista .item .detalle {
+    flex-grow: 1;
+  }
+  #carritoLista .item .detalle h4 {
+    margin: 0 0 3px 0;
+    font-size: 15px;
+  }
+  #carritoLista .item .detalle span {
+    font-size: 13px;
+    color: #4caf50;
+  }
+  #carritoLista .item button {
+    background: #f44336;
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  #carritoFooter {
+    padding: 10px 15px;
+    background: #121212;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #carritoFooter .total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4caf50;
+  }
+  #carritoFooter button {
+    background: #2196f3;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 700;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #carritoFooter button:hover {
+    background: #0b7dda;
+  }
+  /* PayPal modal container */
+  #paypalModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.75);
+    z-index: 15000;
+    justify-content: center;
+    align-items: center;
+  }
+  #paypalModal .content {
+    background: #121212;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #000;
+    width: 90%;
+    max-width: 500px;
+  }
+  #paypalModal .closeBtn {
+    background: #f44336;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  /* Mensaje de categoría */
+  .categoria-mensaje {
+    text-align: center;
+    font-size: 24px;
+    margin: 30px 0;
+    color: #4caf50;
+  }
+  /* Notificación */
+  .notificacion {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    z-index: 100000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  /* Formulario de detalles del pedido */
+  #pedidoForm {
+    padding: 15px;
+    display: none;
+  }
+  #pedidoForm h3 {
+    margin-top: 0;
+    color: #4caf50;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .form-group input, 
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background: #333;
+    color: #eee;
+  }
+  .form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  #continuarPago {
+    background: #4caf50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    width: 100%;
+  }
+  #continuarPago:hover {
+    background: #3e8e41;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div id="google_translate_element"></div>
+  <div class="logo" id="logoPrincipal">🛒 DigitalHub Services</div>
+  <nav>
+    <ul>
+      <li>
+        <a href="#" class="menuCat" data-cat="Twitch Services">Twitch Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Twitch Followers">Twitch Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Twitch Subscribers">Twitch Subscribers</a></li>
+          <li><a href="#" class="subProd" data-prod="Twitch Viewers">Twitch Viewers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="Tiktok Services">Tiktok Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Tiktok Followers">Tiktok Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Views">Tiktok Views</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Monetizable Account">Tiktok Monetizable Account</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Likes">Tiktok Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Comments">Tiktok Comments</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="Instagram Services">Instagram Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Instagram Followers">Instagram Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Likes">Instagram Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Views">Instagram Reel Views</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Comments">Instagram Comments</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="YouTube Services">YouTube Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="YouTube Subscribers">YouTube Subscribers</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Views">YouTube Views</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Likes">YouTube Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Comments">YouTube Comments</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Watch Hours">YouTube Watch Hours</a></li>
+        </ul>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <div id="carritoBtn" title="Ver carrito">🛒<span id="carritoCantidad" style="display:none;">0</span></div>
+</header>
+
+<main>
+  <h1 id="tituloPrincipal">Más vendidos</h1>
+  <div id="categoriaMensaje" class="categoria-mensaje" style="display:none;"></div>
+  <section id="productosMasComprados">
+    <!-- Productos se cargarán aquí -->
+  </section>
+</main>
+
+<!-- Ventana del carrito -->
+<div id="carritoVentana" role="dialog" aria-modal="true" aria-labelledby="carritoTitulo">
+  <header>
+    <div id="carritoTitulo">Carrito de compras</div>
+    <button id="cerrarCarrito" aria-label="Cerrar carrito">✖</button>
+  </header>
+  <div id="carritoLista">
+    <!-- Items del carrito -->
+  </div>
+  
+  <!-- Formulario para detalles del pedido -->
+  <div id="pedidoForm">
+    <h3>Detalles del pedido</h3>
+    <div class="form-group">
+      <label for="enlaceCanal">Enlace de tu canal/perfil/video/post:</label>
+      <input type="url" id="enlaceCanal" placeholder="https://..." required>
+    </div>
+    <div class="form-group" id="comentariosContainer" style="display:none;">
+      <label for="comentarios">Comentarios personalizados (uno por línea):</label>
+      <textarea id="comentarios" placeholder="Escribe los comentarios que quieres..."></textarea>
+    </div>
+    <button id="continuarPago">Continuar al pago</button>
+  </div>
+  
+  <div id="carritoFooter">
+    <div class="total">Total: €0.00</div>
+    <button id="botonPagar">Pagar</button>
+  </div>
+</div>
+
+<!-- Modal PayPal -->
+<div id="paypalModal" role="dialog" aria-modal="true" aria-labelledby="paypalTitulo" style="display:none; justify-content:center; align-items:center;">
+  <div class="content">
+    <button class="closeBtn" aria-label="Cerrar PayPal">Cerrar</button>
+    <div id="paypal-button-container"></div>
+  </div>
+</div>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AfjmfTJZ1IPXg0ahrW2E6g7bSinMBJ3pENi4bv_Tkj6vDc2Pl6YRBd97Y-VQoaRBsvxFGT26xsKnLW1a&currency=EUR"></script>
+
+<script>
+  // Datos de productos, precios
+  const productos = [
+    // Twitch Followers (5 productos)
+    {
+      id: 'twitch-followers-100',
+      nombre: '100 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete básico de 100 seguidores reales para tu canal de Twitch.',
+      precio: 0.89 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383899042832191739/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png10.png?ex=685077eb&is=684f266b&hm=9e86b3c23a92e61c530c8dde5007a99415319f545139269d1c08eb1b823cb312&'
+    },
+    {
+      id: 'twitch-followers-500',
+      nombre: '500 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete intermedio de 500 seguidores reales para tu canal.',
+      precio: 1.12 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383899042832191739/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png10.png?ex=685077eb&is=684f266b&hm=9e86b3c23a92e61c530c8dde5007a99415319f545139269d1c08eb1b823cb312&'
+    },
+    {
+      id: 'twitch-followers-1000',
+      nombre: '1000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete premium de 1000 seguidores reales para tu canal.',
+      precio: 2.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383899042832191739/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png10.png?ex=685077eb&is=684f266b&hm=9e86b3c23a92e61c530c8dde5007a99415319f545139269d1c08eb1b823cb312&'
+    },
+    {
+      id: 'twitch-followers-5000',
+      nombre: '5000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete profesional de 5000 seguidores reales para tu canal.',
+      precio: 3.20 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383899042832191739/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png10.png?ex=685077eb&is=684f266b&hm=9e86b3c23a92e61c530c8dde5007a99415319f545139269d1c08eb1b823cb312&'
+    },
+    {
+      id: 'twitch-followers-10000',
+      nombre: '10000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete VIP de 10000 seguidores reales para tu canal.',
+      precio: 5.99 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383899042832191739/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png10.png?ex=685077eb&is=684f266b&hm=9e86b3c23a92e61c530c8dde5007a99415319f545139269d1c08eb1b823cb312&'
+    },
+    
+    // Twitch Subscribers (5 productos)
+    {
+      id: 'twitch-subs-50',
+      nombre: '1 Month Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '1 suscriptor Tier 1 para tu canal de Twitch.',
+      precio: 1.00,
+      imagen: 'https://storage.sell.app/store/55839/listings/zWVpYqT7YkUmFXwyrjZvlTd13ZEjvrTs2C2S9g5I.gif'
+    },
+    {
+      id: 'twitch-subs-100',
+      nombre: '100 Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '100 suscriptores Tier para tu canal.',
+      precio: 45.00 + 0.45,
+      imagen: 'https://storage.sell.app/store/55839/listings/zWVpYqT7YkUmFXwyrjZvlTd13ZEjvrTs2C2S9g5I.gif'
+    },
+    {
+      id: 'twitch-subs-250',
+      nombre: '250 Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '250 suscriptores para tu canal.',
+      precio: 110.00 + 0.45,
+      imagen: 'https://storage.sell.app/store/55839/listings/zWVpYqT7YkUmFXwyrjZvlTd13ZEjvrTs2C2S9g5I.gif'
+    },
+    {
+      id: 'twitch-subs',
+      nombre: '100 Subscribers ',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '100 suscriptores para tu canal.',
+      precio: 55.00 + 0.45,
+      imagen: 'https://storage.sell.app/store/55839/listings/zWVpYqT7YkUmFXwyrjZvlTd13ZEjvrTs2C2S9g5I.gif'
+    },
+    {
+      id: 'twitch-subs-tier',
+      nombre: '50 Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '50 suscriptores para tu canal.',
+      precio: 24.00 + 0.45,
+      imagen: 'https://storage.sell.app/store/55839/listings/zWVpYqT7YkUmFXwyrjZvlTd13ZEjvrTs2C2S9g5I.gif'
+    },
+    
+    // Twitch Viewers (5 productos)
+    {
+      id: 'twitch-viewers-50',
+      nombre: '50 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '50 viewers reales para tu transmisión en vivo.',
+      precio: 3.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383900915723010118/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png12.png?ex=685079a9&is=684f2829&hm=7f58dd1a603bf4908247b3b5a0e9c66c97d63317c50a4bebc2b9ba2ebb718e82&'
+    },
+    {
+      id: 'twitch-viewers-100',
+      nombre: '100 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '100 viewers reales para tu transmisión.',
+      precio: 4.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383900915723010118/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png12.png?ex=685079a9&is=684f2829&hm=7f58dd1a603bf4908247b3b5a0e9c66c97d63317c50a4bebc2b9ba2ebb718e82&'
+    },
+    {
+      id: 'twitch-viewers-500',
+      nombre: '500 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '500 viewers reales para tu transmisión.',
+      precio: 15.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383900915723010118/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png12.png?ex=685079a9&is=684f2829&hm=7f58dd1a603bf4908247b3b5a0e9c66c97d63317c50a4bebc2b9ba2ebb718e82&'
+    },
+    {
+      id: 'twitch-viewers-1000',
+      nombre: '1000 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '1000 viewers reales para tu transmisión.',
+      precio: 30.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383900915723010118/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png12.png?ex=685079a9&is=684f2829&hm=7f58dd1a603bf4908247b3b5a0e9c66c97d63317c50a4bebc2b9ba2ebb718e82&'
+    },
+    {
+      id: 'twitch-viewers-5000',
+      nombre: '5000 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '5000 viewers reales para tu transmisión.',
+      precio: 120.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383900915723010118/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png12.png?ex=685079a9&is=684f2829&hm=7f58dd1a603bf4908247b3b5a0e9c66c97d63317c50a4bebc2b9ba2ebb718e82&'
+    },
+    
+    // Tiktok Views (5 productos)
+    {
+      id: 'tiktok-views-100',
+      nombre: '100 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '100 Views to your Tiktok Videos.',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383908506255626392/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png14.png?ex=685080bb&is=684f2f3b&hm=bdde8c24ebfe686af21a888cba4aa84ecca55024e4083d3ad9eeec5ed45e5650&'
+    },
+    {
+      id: 'tiktok-views-500',
+      nombre: '500 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '500 Views to your Tiktok Videos.',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383908506255626392/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png14.png?ex=685080bb&is=684f2f3b&hm=bdde8c24ebfe686af21a888cba4aa84ecca55024e4083d3ad9eeec5ed45e5650&'
+    },
+    {
+      id: 'tiktok-views-1000',
+      nombre: '1000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '1000 Views to your Tiktok Videos',
+      precio: 1.10 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383908506255626392/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png14.png?ex=685080bb&is=684f2f3b&hm=bdde8c24ebfe686af21a888cba4aa84ecca55024e4083d3ad9eeec5ed45e5650&'
+    },
+    {
+      id: 'tiktok-views-5000',
+      nombre: '5000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '5000 Views to your Tiktok Videos',
+      precio: 1.20 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383908506255626392/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png14.png?ex=685080bb&is=684f2f3b&hm=bdde8c24ebfe686af21a888cba4aa84ecca55024e4083d3ad9eeec5ed45e5650&'
+    },
+    {
+      id: 'tiktok-views-2000000',
+      nombre: '2000000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '2000000 Views to your Tiktok Videos',
+      precio: 32.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383908506255626392/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png14.png?ex=685080bb&is=684f2f3b&hm=bdde8c24ebfe686af21a888cba4aa84ecca55024e4083d3ad9eeec5ed45e5650&'
+    },
+    
+    // Tiktok Followers (5 productos)
+    {
+      id: 'tiktok-followers-100',
+      nombre: '100 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '100 seguidores reales para tu perfil.',
+      precio: 0.99 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383903621929762817/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png13.png?ex=68507c2f&is=684f2aaf&hm=27f1a82c859fc7d286044862e75936056c19be3e8a50d4571215591ff3863125&'
+    },
+    {
+      id: 'tiktok-followers-500',
+      nombre: '500 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '500 seguidores reales para tu perfil.',
+      precio: 1.50 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383903621929762817/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png13.png?ex=68507c2f&is=684f2aaf&hm=27f1a82c859fc7d286044862e75936056c19be3e8a50d4571215591ff3863125&'
+    },
+    {
+      id: 'tiktok-followers-1000',
+      nombre: '1000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '1000 seguidores reales para tu perfil.',
+      precio: 3.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383903621929762817/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png13.png?ex=68507c2f&is=684f2aaf&hm=27f1a82c859fc7d286044862e75936056c19be3e8a50d4571215591ff3863125&'
+    },
+    {
+      id: 'tiktok-followers-5000',
+      nombre: '5000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '5000 seguidores reales para tu perfil.',
+      precio: 10.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383903621929762817/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png13.png?ex=68507c2f&is=684f2aaf&hm=27f1a82c859fc7d286044862e75936056c19be3e8a50d4571215591ff3863125&'
+    },
+    {
+      id: 'tiktok-followers-10000',
+      nombre: '10000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '10000 seguidores reales para tu perfil.',
+      precio: 16.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383903621929762817/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png13.png?ex=68507c2f&is=684f2aaf&hm=27f1a82c859fc7d286044862e75936056c19be3e8a50d4571215591ff3863125&'
+    },
+    
+    // Instagram Followers (5 productos)
+    {
+      id: 'instagram-followers-100',
+      nombre: '100 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '100 seguidores reales para tu perfil de Instagram.',
+      precio: 1.00 + 0.45,
+      imagen: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'instagram-followers-500',
+      nombre: '500 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '500 seguidores reales para tu perfil.',
+      precio: 2.00 + 0.45,
+      imagen: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'instagram-followers-1000',
+      nombre: '1000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '1000 seguidores reales para tu perfil.',
+      precio: 4.00 + 0.45,
+      imagen: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'instagram-followers-5000',
+      nombre: '5000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '5000 seguidores reales para tu perfil.',
+      precio: 12.00 + 0.45,
+      imagen: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'instagram-followers-10000',
+      nombre: '10000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '10000 seguidores reales para tu perfil.',
+      precio: 25.00 + 0.45,
+      imagen: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+    },
+    
+    // YouTube Subscribers (5 productos)
+    {
+      id: 'youtube-subs-100',
+      nombre: '100 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '100 suscriptores reales para tu canal de YouTube.',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383898244198826044/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png9.png?ex=6850772d&is=684f25ad&hm=b48d2c7e9e4e7c7e649e1b874ada339b92ab553086de841312419293eace48a4&'
+    },
+    {
+      id: 'youtube-subs-500',
+      nombre: '500 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '500 suscriptores reales para tu canal.',
+      precio: 2.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383898155887759491/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png8.png?ex=68507717&is=684f2597&hm=82f4137d09ef4c970f590b06528819a26e6b2e13a8710a5e21224d8cde854a9b&'
+    },
+    {
+      id: 'youtube-subs-1000',
+      nombre: '1000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '1000 suscriptores reales para tu canal.',
+      precio: 3.99 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383898017601425578/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png7.png?ex=685076f6&is=684f2576&hm=ec69928c59524b5383b02f9b660eb3e19b9657853690f7073fcc8322141598ff&'
+    },
+    {
+      id: 'youtube-subs-5000',
+      nombre: '5000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '5000 suscriptores reales para tu canal.',
+      precio: 10.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383897871803219988/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png6.png?ex=685076d4&is=684f2554&hm=88e76517d1cd0135a73b41793be9a5c726b492e4652ea1d2474e9ff7c52b36d8&'
+    },
+    {
+      id: 'youtube-subs-10000',
+      nombre: '10000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '10000 suscriptores reales para tu canal.',
+      precio: 20.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383897762525090003/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png5.png?ex=685076ba&is=684f253a&hm=185674edc27cc68621606c1d4af42b3bb3f21e3192fede2b46e0b54d48d5b970&'
+    },
+    
+    // YouTube Watch Hours (5 productos)
+    {
+      id: 'youtube-hours-1000',
+      nombre: '500 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '500 horas de visualización para tu canal.',
+      precio: 30.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384578945533608138/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png?ex=6852f120&is=68519fa0&hm=a19a50544fb5b93606047019226832a96ed22ff1d18c8efe33a94f51770a2929&'
+    },
+    {
+      id: 'youtube-hours-4000',
+      nombre: '1000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '1000 horas de visualización (mínimo para monetización).',
+      precio: 55.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384578945533608138/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png?ex=6852f120&is=68519fa0&hm=a19a50544fb5b93606047019226832a96ed22ff1d18c8efe33a94f51770a2929&'
+    },
+    {
+      id: 'youtube-hours-10000',
+      nombre: '2000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '2000 horas de visualización para tu canal.',
+      precio: 95.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384578945533608138/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png?ex=6852f120&is=68519fa0&hm=a19a50544fb5b93606047019226832a96ed22ff1d18c8efe33a94f51770a2929&'
+    },
+    {
+      id: 'youtube-hours-50000',
+      nombre: '3000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '3000 horas de visualización para tu canal.',
+      precio: 141.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384578945533608138/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png?ex=6852f120&is=68519fa0&hm=a19a50544fb5b93606047019226832a96ed22ff1d18c8efe33a94f51770a2929&'
+    },
+    {
+      id: 'youtube-hours-100000',
+      nombre: '4000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '40000 horas de visualización para tu canal.',
+      precio: 190.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384578945533608138/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png?ex=6852f120&is=68519fa0&hm=a19a50544fb5b93606047019226832a96ed22ff1d18c8efe33a94f51770a2929&'
+    },
+    {
+      id: 'tiktok-monetizable-account',
+      nombre: 'TikTok Beta Account Full Verified by 100k views and 10k Followers + Tiktok Shop Program',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Monetizable Account',
+      descripcion: 'Pre-approved TikTok account with monetization option available. Just start posting videos to activate and begin earning!. ACCOUNT WILL BE SENT WITH SAME EMAIL YOU PAYED WITH PAYPAL!',
+      precio: 40.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1383910228478791730/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png15.png?ex=68508256&is=684f30d6&hm=307ba55e735928bb1418812de7f65bc2c7cc7e04e86b41080e3c8203d2017a29&'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 500 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384093177425821696/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png16.png?ex=68512cb8&is=684fdb38&hm=618f907f2e25abd31e1982ceb78b209f852596c945bdb09f49a965e55b12328f&'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 1000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 1.20 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384093177425821696/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png16.png?ex=68512cb8&is=684fdb38&hm=618f907f2e25abd31e1982ceb78b209f852596c945bdb09f49a965e55b12328f&'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 2000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 1.45 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384093177425821696/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png16.png?ex=68512cb8&is=684fdb38&hm=618f907f2e25abd31e1982ceb78b209f852596c945bdb09f49a965e55b12328f&'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 10000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 5.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384093177425821696/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png16.png?ex=68512cb8&is=684fdb38&hm=618f907f2e25abd31e1982ceb78b209f852596c945bdb09f49a965e55b12328f&'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '30 Random TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 1.11 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384095861927317535/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png17.png?ex=68512f38&is=684fddb8&hm=c6c26b9ff4b5b4df5dc0736a377de2c0a3f1e569f795f62295b59a6ad31fc11d&'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '50 Random TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 1.17 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384095861927317535/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png17.png?ex=68512f38&is=684fddb8&hm=c6c26b9ff4b5b4df5dc0736a377de2c0a3f1e569f795f62295b59a6ad31fc11d&'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '100 Random TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 1.50 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384095861927317535/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png17.png?ex=68512f38&is=684fddb8&hm=c6c26b9ff4b5b4df5dc0736a377de2c0a3f1e569f795f62295b59a6ad31fc11d&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '100 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 0.89 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '500 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 0.92 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '1000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '5000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 1.89 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '10000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 2.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '200000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 5.90 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384114821309530122/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png18.png?ex=685140e1&is=684fef61&hm=3f0f84fe2867fa77da92e3329bb37c14ebffbb3107bb8f9c42e3a8075d0028ed&'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '100 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 0.47 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '1000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 0.78 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '5000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '10000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 1.20 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '20000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 1.30 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-views',
+      nombre: '50000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 2.30 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-views',
+      nombre: '1000000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 15.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384118591582109756/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png19.png?ex=68514463&is=684ff2e3&hm=0687b664b7dfefcba7b137aafe833747c10c4820d84f83eb7e31c1dc49cd7593&'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '100 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384122427549683763/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png20.png?ex=685147f6&is=684ff676&hm=f4ff58cf3ef52b89f3637f088d4c05626186c42eafb0812b880d18b4adf59af4&'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '300 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 3.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384122427549683763/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png20.png?ex=685147f6&is=684ff676&hm=f4ff58cf3ef52b89f3637f088d4c05626186c42eafb0812b880d18b4adf59af4&'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '500 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 5.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384122427549683763/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png20.png?ex=685147f6&is=684ff676&hm=f4ff58cf3ef52b89f3637f088d4c05626186c42eafb0812b880d18b4adf59af4&'
+    },
+    {
+      id: 'youtube-views-500',
+      nombre: '500 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '500 views for your channel',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384125375277436948/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png21.png?ex=68514ab5&is=684ff935&hm=18c2b992c9e757e1bb4df3da0983bfb7981d69d7b5c888d94d9d886b4c3c6257&'
+    },
+    {
+      id: 'youtube-views-1000',
+      nombre: '1000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '1000 views for your channel',
+      precio: 1.90 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384125375277436948/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png21.png?ex=68514ab5&is=684ff935&hm=18c2b992c9e757e1bb4df3da0983bfb7981d69d7b5c888d94d9d886b4c3c6257&'
+    },
+    {
+      id: 'youtube-views-2000',
+      nombre: '2000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '2000 views for your channel',
+      precio: 4.20 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384125375277436948/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png21.png?ex=68514ab5&is=684ff935&hm=18c2b992c9e757e1bb4df3da0983bfb7981d69d7b5c888d94d9d886b4c3c6257&'
+    },
+    {
+      id: 'youtube-views-5000',
+      nombre: '5000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '5000 views for your channel',
+      precio: 9.10 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384125375277436948/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png21.png?ex=68514ab5&is=684ff935&hm=18c2b992c9e757e1bb4df3da0983bfb7981d69d7b5c888d94d9d886b4c3c6257&'
+    },
+    {
+      id: 'youtube-views-10000',
+      nombre: '10000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '10000 views for your channel',
+      precio: 20.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384125375277436948/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png21.png?ex=68514ab5&is=684ff935&hm=18c2b992c9e757e1bb4df3da0983bfb7981d69d7b5c888d94d9d886b4c3c6257&'
+    },
+    {
+      id: 'youtube-likes-500',
+      nombre: '500 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '500 Likes for your youtube Channel',
+      precio: 1.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384129828034445473/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png22.png?ex=68514eda&is=684ffd5a&hm=b1c5b35c057a7b405f2d207ab0e354e05227391a68d99f6b2e422527c7efaeed&'
+    },
+    {
+      id: 'youtube-likes-1000',
+      nombre: '1000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '1000 Likes for your youtube Channel',
+      precio: 2.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384129828034445473/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png22.png?ex=68514eda&is=684ffd5a&hm=b1c5b35c057a7b405f2d207ab0e354e05227391a68d99f6b2e422527c7efaeed&'
+    },
+    {
+      id: 'youtube-likes-2000',
+      nombre: '2000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '2000 Likes for your youtube Channel',
+      precio: 4.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384129828034445473/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png22.png?ex=68514eda&is=684ffd5a&hm=b1c5b35c057a7b405f2d207ab0e354e05227391a68d99f6b2e422527c7efaeed&'
+    },
+    {
+      id: 'youtube-likes-5000',
+      nombre: '5000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '5000 Likes for your youtube Channel',
+      precio: 5.23 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384129828034445473/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png22.png?ex=68514eda&is=684ffd5a&hm=b1c5b35c057a7b405f2d207ab0e354e05227391a68d99f6b2e422527c7efaeed&'
+    },
+    {
+      id: 'youtube-likes-10000',
+      nombre: '10000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '10000 Likes for your youtube Channel',
+      precio: 7.00 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384129828034445473/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png22.png?ex=68514eda&is=684ffd5a&hm=b1c5b35c057a7b405f2d207ab0e354e05227391a68d99f6b2e422527c7efaeed&'
+    },
+    {
+      id: 'youtube-comments-10',
+      nombre: '10 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '10 Custom Comments for your YouTube VIDEO',
+      precio: 0.80 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384131875634806804/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png23.png?ex=685150c3&is=684fff43&hm=ad69e54859cc6525bf2ee10bb443bb390f8e1d3bedb2b37b7dc8679047ac9b9f&'
+    },
+    {
+      id: 'youtube-comments-20',
+      nombre: '20 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '20 Custom Comments for your YouTube VIDEO',
+      precio: 1.60 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384131875634806804/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png23.png?ex=685150c3&is=684fff43&hm=ad69e54859cc6525bf2ee10bb443bb390f8e1d3bedb2b37b7dc8679047ac9b9f&'
+    },
+    {
+      id: 'youtube-comments-30',
+      nombre: '30 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '30 Custom Comments for your YouTube VIDEO',
+      precio: 2.30 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384131875634806804/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png23.png?ex=685150c3&is=684fff43&hm=ad69e54859cc6525bf2ee10bb443bb390f8e1d3bedb2b37b7dc8679047ac9b9f&'
+    },
+    {
+      id: 'youtube-comments-50',
+      nombre: '50 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '50 Custom Comments for your YouTube VIDEO',
+      precio: 3.23 + 0.45,
+      imagen: 'https://cdn.discordapp.com/attachments/1383895868465479740/1384131875634806804/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png23.png?ex=685150c3&is=684fff43&hm=ad69e54859cc6525bf2ee10bb443bb390f8e1d3bedb2b37b7dc8679047ac9b9f&'
+    },
+  ]
+  
+  // Carrito: Array de objetos {id, cantidad}
+  let carrito = [];
+  let necesitaComentarios = false;
+
+  // Actualizar contador en icono carrito
+  function actualizarContador() {
+    const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    const spanCantidad = document.getElementById('carritoCantidad');
+    if (cantidadTotal > 0) {
+      spanCantidad.style.display = 'inline-block';
+      spanCantidad.textContent = cantidadTotal;
+    } else {
+      spanCantidad.style.display = 'none';
+    }
+  }
+
+  // Mostrar productos en "Más vendidos" o filtrados por categoría/producto
+  function mostrarProductos(filtro = null, valor = null) {
+    const contenedor = document.getElementById('productosMasComprados');
+    const tituloPrincipal = document.getElementById('tituloPrincipal');
+    const categoriaMensaje = document.getElementById('categoriaMensaje');
+    
+    contenedor.innerHTML = '';
+    
+    let productosFiltrados = productos;
+    
+    if (filtro && valor) {
+      if (filtro === 'categoria') {
+        productosFiltrados = productos.filter(p => p.categoria === valor);
+        tituloPrincipal.style.display = 'none';
+        categoriaMensaje.style.display = 'block';
+        categoriaMensaje.textContent = `Productos de ${valor}`;
+      } else if (filtro === 'producto') {
+        productosFiltrados = productos.filter(p => p.tipo === valor);
+        tituloPrincipal.style.display = 'none';
+        categoriaMensaje.style.display = 'block';
+        categoriaMensaje.textContent = valor;
+      }
+    } else {
+      // Mostrar productos destacados por defecto
+      productosFiltrados = productos.filter(p => 
+        p.id === 'twitch-followers-1000' || 
+        p.id === 'spotify-followers-1000' || 
+        p.id === 'instagram-followers-1000' || 
+        p.id === 'youtube-subs-1000' ||
+        p.id === 'twitch-subs-100' ||
+        p.id === 'tiktok-followers-5000' ||
+        p.id === 'instagram-followers-5000' ||
+        p.id === 'youtube-subs-5000' 
+      );
+      tituloPrincipal.style.display = 'block';
+      categoriaMensaje.style.display = 'none';
+    }
+    
+    if (productosFiltrados.length === 0) {
+      contenedor.innerHTML = '<p>No se encontraron productos.</p>';
+      return;
+    }
+    
+    productosFiltrados.forEach(prod => {
+      const div = document.createElement('div');
+      div.className = 'producto';
+      div.innerHTML = `
+        <div class="producto-img-container">
+          <img src="${prod.imagen}" alt="${prod.nombre}" />
+        </div>
+        <div class="info">
+          <h3>${prod.nombre}</h3>
+          <p class="precio">€${prod.precio.toFixed(2)}</p>
+          <p class="descripcion">${prod.descripcion}</p>
+          <button class="btnAñadir" data-id="${prod.id}">Añadir al carrito</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  // Añadir producto al carrito
+  function añadirAlCarrito(id) {
+    const index = carrito.findIndex(item => item.id === id);
+    if (index > -1) {
+      carrito[index].cantidad++;
+    } else {
+      carrito.push({ id, cantidad: 1 });
+    }
+    actualizarContador();
+    mostrarNotificacion('Producto añadido al carrito');
+  }
+
+  // Mostrar notificación
+  function mostrarNotificacion(mensaje) {
+    const notificacionExistente = document.querySelector('.notificacion');
+    if (notificacionExistente) {
+      document.body.removeChild(notificacionExistente);
+    }
+    
+    const notificacion = document.createElement('div');
+    notificacion.className = 'notificacion';
+    notificacion.textContent = mensaje;
+    
+    document.body.appendChild(notificacion);
+    
+    setTimeout(() => {
+      notificacion.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notificacion);
+      }, 500);
+    }, 2000);
+  }
+
+  // Mostrar ventana carrito
+  function mostrarCarrito() {
+    const ventana = document.getElementById('carritoVentana');
+    const lista = document.getElementById('carritoLista');
+    const pedidoForm = document.getElementById('pedidoForm');
+    
+    lista.innerHTML = '';
+    pedidoForm.style.display = 'none';
+
+    if(carrito.length === 0) {
+      lista.innerHTML = '<p>Tu carrito está vacío.</p>';
+    } else {
+      carrito.forEach(item => {
+        const prod = productos.find(p => p.id === item.id);
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="${prod.imagen}" alt="${prod.nombre}" />
+          <div class="detalle">
+            <h4>${prod.nombre}</h4>
+            <span>€${(prod.precio * item.cantidad).toFixed(2)} (${item.cantidad} unidad${item.cantidad > 1 ? 'es' : ''})</span>
+          </div>
+          <button class="btnEliminar" data-id="${prod.id}">✖</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // Actualizar total
+    const total = carrito.reduce((acc, item) => {
+      const prod = productos.find(p => p.id === item.id);
+      return acc + (prod.precio * item.cantidad);
+    }, 0);
+    document.querySelector('#carritoFooter .total').textContent = `Total: €${total.toFixed(2)}`;
+
+    // Mostrar ventana
+    ventana.style.display = 'flex';
+  }
+
+  // Eliminar producto del carrito
+  function eliminarDelCarrito(id) {
+    carrito = carrito.filter(item => item.id !== id);
+    actualizarContador();
+    mostrarCarrito();
+    mostrarNotificacion('Producto eliminado del carrito');
+  }
+
+  // Verificar si el carrito contiene productos que necesitan comentarios
+  function verificarComentariosNecesarios() {
+    const productosComentarios = ['YouTube Comments', 'Tiktok Comments', 'Instagram Comments'];
+    necesitaComentarios = carrito.some(item => {
+      const prod = productos.find(p => p.id === item.id);
+      return productosComentarios.includes(prod.tipo);
+    });
+    
+    const comentariosContainer = document.getElementById('comentariosContainer');
+    if (necesitaComentarios) {
+      comentariosContainer.style.display = 'block';
+    } else {
+      comentariosContainer.style.display = 'none';
+    }
+  }
+
+  // Configurar PayPal
+// Configurar PayPal con notificación a Telegram
+function configurarPayPal() {
+    document.getElementById('paypal-button-container').innerHTML = '';
+    
+    const total = carrito.reduce((acc, item) => {
+      const prod = productos.find(p => p.id === item.id);
+      return acc + (prod.precio * item.cantidad);
+    }, 0);
+
+    const enlaceCanal = document.getElementById('enlaceCanal').value;
+    const comentarios = document.getElementById('comentarios').value;
+    
+    // Crear descripción con los detalles adicionales
+    let descripcion = carrito.map(item => {
+      const prod = productos.find(p => p.id === item.id);
+      return `${prod.nombre} (${item.cantidad} unidad${item.cantidad > 1 ? 'es' : ''})`;
+    }).join(', ');
+    
+    descripcion += `\n\nEnlace del canal: ${enlaceCanal}`;
+    
+    if (necesitaComentarios && comentarios) {
+      descripcion += `\n\nComentarios personalizados:\n${comentarios}`;
+    }
+
+    if (total <= 0) {
+      mostrarNotificacion('El total no puede ser cero');
+      return;
+    }
+
+    try {
+      paypal.Buttons({
+        style: {
+          color: 'blue',
+          shape: 'rect',
+          label: 'pay',
+          height: 40
+        },
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: total.toFixed(2),
+                currency_code: 'EUR',
+                breakdown: {
+                  item_total: {
+                    value: total.toFixed(2),
+                    currency_code: 'EUR'
+                  }
+                }
+              },
+              description: descripcion,
+              items: carrito.map(item => {
+                const prod = productos.find(p => p.id === item.id);
+                return {
+                  name: prod.nombre.substring(0, 127),
+                  unit_amount: {
+                    value: prod.precio.toFixed(2),
+                    currency_code: 'EUR'
+                  },
+                  quantity: item.cantidad.toString()
+                };
+              })
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Notificación a Telegram
+            const mensajeTelegram = `🛒 *NUEVO PEDIDO* 🛒\n` +
+              `💰 *Total:* €${total.toFixed(2)}\n` +
+              `🌐 *Enlace:* ${enlaceCanal}\n` +
+              `📝 *Comentarios:* ${comentarios || 'Ninguno'}\n\n` +
+              `📦 *Productos:*\n${carrito.map(item => {
+                const prod = productos.find(p => p.id === item.id);
+                return `➤ ${prod.nombre} (x${item.cantidad}) - €${(prod.precio * item.cantidad).toFixed(2)}`;
+              }).join('\n')}`;
+
+            fetch(`https://api.telegram.org/bot8040667899:AAFUOEOi8O4auBqSm00UOuefg_DwTnTnBCA/sendMessage?chat_id=6563163563&text=${encodeURIComponent(mensajeTelegram)}&parse_mode=Markdown`)
+              .then(() => mostrarNotificacion('✅ Porfavor Tenga en cuenta que su pedido puede tardar un par de horas o minutos en llegar, depende de la hora y el dia!'))
+              .catch(() => console.log('Error al notificar a Telegram'));
+
+            // Resetear sistema
+            mostrarNotificacion('Pago completado con éxito');
+            carrito = [];
+            actualizarContador();
+            document.getElementById('carritoVentana').style.display = 'none';
+            document.getElementById('paypalModal').style.display = 'none';
+            document.getElementById('pedidoForm').style.display = 'none';
+            document.getElementById('enlaceCanal').value = '';
+            document.getElementById('comentarios').value = '';
+          });
+        },
+        onError: function(err) {
+          console.error('Error PayPal:', err);
+          mostrarNotificacion('Error en el pago. Por favor intenta nuevamente.');
+        }
+      }).render('#paypal-button-container');
+    } catch (error) {
+      console.error('Error al renderizar botones PayPal:', error);
+      mostrarNotificacion('Error al cargar PayPal. Recarga la página.');
+    }
+}
+  // Event listeners
+  document.addEventListener('DOMContentLoaded', () => {
+    // Mostrar productos destacados al cargar
+    mostrarProductos();
+
+    // Menú categorías
+    document.querySelectorAll('.menuCat').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        mostrarProductos('categoria', e.target.dataset.cat);
+      });
+    });
+
+    // Submenú productos
+    document.querySelectorAll('.subProd').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        mostrarProductos('producto', e.target.dataset.prod);
+      });
+    });
+
+    // Logo principal - volver a inicio
+    document.getElementById('logoPrincipal').addEventListener('click', () => {
+      mostrarProductos();
+    });
+
+    // Botón carrito
+    document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
+    document.getElementById('cerrarCarrito').addEventListener('click', () => {
+      document.getElementById('carritoVentana').style.display = 'none';
+    });
+
+    // Añadir al carrito (delegación de eventos)
+    document.getElementById('productosMasComprados').addEventListener('click', (e) => {
+      if (e.target.classList.contains('btnAñadir')) {
+        añadirAlCarrito(e.target.dataset.id);
+      }
+    });
+
+    // Eliminar del carrito (delegación de eventos)
+    document.getElementById('carritoLista').addEventListener('click', (e) => {
+      if (e.target.classList.contains('btnEliminar')) {
+        eliminarDelCarrito(e.target.dataset.id);
+      }
+    });
+
+    // Botón pagar
+    document.getElementById('botonPagar').addEventListener('click', () => {
+      if (carrito.length === 0) {
+        mostrarNotificacion('El carrito está vacío');
+        return;
+      }
+      
+      // Verificar si necesita comentarios
+      verificarComentariosNecesarios();
+      
+      // Mostrar formulario de detalles
+      document.getElementById('pedidoForm').style.display = 'block';
+    });
+
+    // Continuar al pago
+    document.getElementById('continuarPago').addEventListener('click', () => {
+      const enlaceCanal = document.getElementById('enlaceCanal').value;
+      
+      if (!enlaceCanal) {
+        mostrarNotificacion('Por favor ingresa el enlace de tu canal');
+        return;
+      }
+      
+      if (necesitaComentarios && !document.getElementById('comentarios').value) {
+        mostrarNotificacion('Por favor ingresa los comentarios personalizados');
+        return;
+      }
+      
+      document.getElementById('paypalModal').style.display = 'flex';
+      configurarPayPal();
+    });
+
+    // Cerrar modal PayPal
+    document.querySelector('#paypalModal .closeBtn').addEventListener('click', () => {
+      document.getElementById('paypalModal').style.display = 'none';
+      document.getElementById('paypal-button-container').innerHTML = '';
+    });
+  });
+</script>
+</body>
+</html>
