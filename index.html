@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="p:domain_verify" content="41f7fddf25de75930488511ff8db473a"/>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<link rel="icon" type="image/png" href="FotosSeverWEB/ChatGPT Image Jun 16, 2025, 04_07_45 PM.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DigitalHub Services</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; background: #121212; color: #eee;
+  }
+  header {
+    background: #202020;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  header .logo {
+    font-weight: 900;
+    font-size: 24px;
+    color: #4caf50;
+    user-select: none;
+    cursor: pointer;
+  }
+  nav ul {
+    list-style: none;
+    margin: 0; padding: 0; display: flex;
+  }
+  nav ul li {
+    position: relative;
+  }
+  nav ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: #eee;
+    text-decoration: none;
+    user-select: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  }
+  nav ul li:hover > a,
+  nav ul li a.active {
+    background: #4caf50;
+    color: #121212;
+  }
+  /* Dropdown */
+  nav ul li ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #303030;
+    display: none;
+    min-width: 180px;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 9999;
+  }
+  nav ul li:hover ul {
+    display: block;
+  }
+  nav ul li ul li a {
+    padding: 10px 15px;
+    color: #ccc;
+    font-size: 14px;
+  }
+  nav ul li ul li a:hover {
+    background: #4caf50;
+    color: #121212;
+  }
+  /* Carrito botón */
+  #carritoBtn {
+    cursor: pointer;
+    color: #eee;
+    position: relative;
+    font-size: 24px;
+  }
+  #carritoCantidad {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+  }
+  main {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #productosMasComprados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .producto {
+    background: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 12px #00000088;
+    transition: transform 0.3s ease;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .producto:hover {
+    transform: scale(1.03);
+  }
+  .producto-img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+  }
+  .producto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .producto .info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .producto .info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+  }
+  .producto .info .precio {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #4caf50;
+  }
+  .producto .info .descripcion {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 15px;
+    flex-grow: 1;
+  }
+  .producto .info button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+  }
+  .btnAñadir {
+    background: #2196f3;
+    color: white;
+  }
+  .btnAñadir:hover {
+    background: #0b7dda;
+  }
+  /* Carrito ventana */
+  #carritoVentana {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 320px;
+    max-height: 420px;
+    background: #222;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #000;
+    color: #eee;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10000;
+  }
+  #carritoVentana header {
+    padding: 15px;
+    font-weight: 700;
+    background: #4caf50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #carritoVentana header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  #carritoLista {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  #carritoLista .item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+  }
+  #carritoLista .item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  #carritoLista .item .detalle {
+    flex-grow: 1;
+  }
+  #carritoLista .item .detalle h4 {
+    margin: 0 0 3px 0;
+    font-size: 15px;
+  }
+  #carritoLista .item .detalle span {
+    font-size: 13px;
+    color: #4caf50;
+  }
+  #carritoLista .item button {
+    background: #f44336;
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  #carritoFooter {
+    padding: 10px 15px;
+    background: #121212;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #carritoFooter .total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4caf50;
+  }
+  #carritoFooter button {
+    background: #2196f3;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 700;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #carritoFooter button:hover {
+    background: #0b7dda;
+  }
+  /* PayPal modal container */
+  #paypalModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.75);
+    z-index: 15000;
+    justify-content: center;
+    align-items: center;
+  }
+  #paypalModal .content {
+    background: #121212;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #000;
+    width: 90%;
+    max-width: 500px;
+  }
+  #paypalModal .closeBtn {
+    background: #f44336;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  /* Mensaje de categoría */
+  .categoria-mensaje {
+    text-align: center;
+    font-size: 24px;
+    margin: 30px 0;
+    color: #4caf50;
+  }
+  /* Notificación */
+  .notificacion {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    z-index: 100000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  /* Formulario de detalles del pedido */
+  #pedidoForm {
+    padding: 15px;
+    display: none;
+  }
+  #pedidoForm h3 {
+    margin-top: 0;
+    color: #4caf50;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .form-group input, 
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background: #333;
+    color: #eee;
+  }
+  .form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  #continuarPago {
+    background: #4caf50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    width: 100%;
+  }
+  #continuarPago:hover {
+    background: #3e8e41;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div id="google_translate_element"></div>
+  <div class="logo" id="logoPrincipal">🛒 DigitalHub Services</div>
+  <nav>
+    <ul>
+      <li>
+        <a href="#" class="menuCat" data-cat="Twitch Services">Twitch Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Twitch Followers">Twitch Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Twitch Subscribers">Twitch Subscribers</a></li>
+          <li><a href="#" class="subProd" data-prod="Twitch Viewers">Twitch Viewers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="Tiktok Services">Tiktok Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Tiktok Followers">Tiktok Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Views">Tiktok Views</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Monetizable Account">Tiktok Monetizable Account</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Likes">Tiktok Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="Tiktok Comments">Tiktok Comments</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="Instagram Services">Instagram Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="Instagram Followers">Instagram Followers</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Likes">Instagram Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Views">Instagram Reel Views</a></li>
+          <li><a href="#" class="subProd" data-prod="Instagram Comments">Instagram Comments</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#" class="menuCat" data-cat="YouTube Services">YouTube Services</a>
+        <ul>
+          <li><a href="#" class="subProd" data-prod="YouTube Subscribers">YouTube Subscribers</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Views">YouTube Views</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Likes">YouTube Likes</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Comments">YouTube Comments</a></li>
+          <li><a href="#" class="subProd" data-prod="YouTube Watch Hours">YouTube Watch Hours</a></li>
+        </ul>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <div id="carritoBtn" title="Ver carrito">🛒<span id="carritoCantidad" style="display:none;">0</span></div>
+</header>
+
+<main>
+  <h1 id="tituloPrincipal">Más vendidos</h1>
+  <div id="categoriaMensaje" class="categoria-mensaje" style="display:none;"></div>
+  <section id="productosMasComprados">
+    <!-- Productos se cargarán aquí -->
+  </section>
+</main>
+
+<!-- Ventana del carrito -->
+<div id="carritoVentana" role="dialog" aria-modal="true" aria-labelledby="carritoTitulo">
+  <header>
+    <div id="carritoTitulo">Carrito de compras</div>
+    <button id="cerrarCarrito" aria-label="Cerrar carrito">✖</button>
+  </header>
+  <div id="carritoLista">
+    <!-- Items del carrito -->
+  </div>
+  
+  <!-- Formulario para detalles del pedido -->
+  <div id="pedidoForm">
+    <h3>Detalles del pedido</h3>
+    <div class="form-group">
+      <label for="enlaceCanal">Enlace de tu canal/perfil/video/post:</label>
+      <input type="url" id="enlaceCanal" placeholder="https://..." required>
+    </div>
+    <div class="form-group" id="comentariosContainer" style="display:none;">
+      <label for="comentarios">Comentarios personalizados (uno por línea):</label>
+      <textarea id="comentarios" placeholder="Escribe los comentarios que quieres..."></textarea>
+    </div>
+    <button id="continuarPago">Continuar al pago</button>
+  </div>
+  
+  <div id="carritoFooter">
+    <div class="total">Total: €0.00</div>
+    <button id="botonPagar">Pagar</button>
+  </div>
+</div>
+
+<!-- Modal PayPal -->
+<div id="paypalModal" role="dialog" aria-modal="true" aria-labelledby="paypalTitulo" style="display:none; justify-content:center; align-items:center;">
+  <div class="content">
+    <button class="closeBtn" aria-label="Cerrar PayPal">Cerrar</button>
+    <div id="paypal-button-container"></div>
+  </div>
+</div>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AfjmfTJZ1IPXg0ahrW2E6g7bSinMBJ3pENi4bv_Tkj6vDc2Pl6YRBd97Y-VQoaRBsvxFGT26xsKnLW1a&currency=EUR"></script>
+
+<script>
+  // Datos de productos, precios
+  const productos = [
+    // Twitch Followers (5 productos)
+    {
+      id: 'twitch-followers-100',
+      nombre: '100 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete básico de 100 seguidores reales para tu canal de Twitch.',
+      precio: 1.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch followers.png'
+    },
+    {
+      id: 'twitch-followers-500',
+      nombre: '500 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete intermedio de 500 seguidores reales para tu canal.',
+      precio: 2.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch followers.png'
+    },
+    {
+      id: 'twitch-followers-1000',
+      nombre: '1000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete premium de 1000 seguidores reales para tu canal.',
+      precio: 4.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch followers.png'
+    },
+    {
+      id: 'twitch-followers-5000',
+      nombre: '5000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete profesional de 5000 seguidores reales para tu canal.',
+      precio: 6.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch followers.png'
+    },
+    {
+      id: 'twitch-followers-10000',
+      nombre: '10000 Twitch Followers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Followers',
+      descripcion: 'Paquete VIP de 10000 seguidores reales para tu canal.',
+      precio: 11.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch followers.png'
+    },
+    
+    // Twitch Subscribers (5 productos)
+    {
+      id: 'twitch-subs-50',
+      nombre: '1 Month Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '1 suscriptor para tu canal de Twitch.',
+      precio: 2.00,
+      imagen: 'FotosSeverWEB/twitch subs.gif'
+    },
+    {
+      id: 'twitch-subs-100',
+      nombre: '100 Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '100 suscriptores Tier para tu canal.',
+      precio: 120 + 0.45,
+      imagen: 'FotosSeverWEB/twitch subs.gif'
+    },
+    {
+      id: 'twitch-subs-250',
+      nombre: '250 Twitch Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '250 suscriptores para tu canal.',
+      precio: 230 + 0.45,
+      imagen: 'FotosSeverWEB/twitch subs.gif'
+    },
+    {
+      id: 'twitch-subs-tier',
+      nombre: '50 Subscribers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Subscribers',
+      descripcion: '50 suscriptores para tu canal.',
+      precio: 24.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch subs.gif'
+    },
+    
+    // Twitch Viewers (5 productos)
+    {
+      id: 'twitch-viewers-50',
+      nombre: '50 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '50 viewers reales para tu transmisión en vivo.',
+      precio: 6.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch viewers live.png'
+    },
+    {
+      id: 'twitch-viewers-100',
+      nombre: '100 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '100 viewers reales para tu transmisión.',
+      precio: 12.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch viewers live.png'
+    },
+    {
+      id: 'twitch-viewers-500',
+      nombre: '500 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '500 viewers reales para tu transmisión.',
+      precio: 25.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch viewers live.png'
+    },
+    {
+      id: 'twitch-viewers-1000',
+      nombre: '1000 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '1000 viewers reales para tu transmisión.',
+      precio: 45.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch viewers live.png'
+    },
+    {
+      id: 'twitch-viewers-5000',
+      nombre: '5000 Twitch Viewers',
+      categoria: 'Twitch Services',
+      tipo: 'Twitch Viewers',
+      descripcion: '5000 viewers reales para tu transmisión.',
+      precio: 70.00 + 0.45,
+      imagen: 'FotosSeverWEB/twitch viewers live.png'
+    },
+    
+    // Tiktok Views (5 productos)
+    {
+      id: 'tiktok-views-100',
+      nombre: '100 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '100 Views to your Tiktok Videos.',
+      precio: 2.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok view.png'
+    },
+    {
+      id: 'tiktok-views-500',
+      nombre: '500 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '500 Views to your Tiktok Videos.',
+      precio: 8.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok view.png'
+    },
+    {
+      id: 'tiktok-views-1000',
+      nombre: '1000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '1000 Views to your Tiktok Videos',
+      precio: 10.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok view.png'
+    },
+    {
+      id: 'tiktok-views-5000',
+      nombre: '5000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '5000 Views to your Tiktok Videos',
+      precio: 13.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok view.png'
+    },
+    {
+      id: 'tiktok-views-2000000',
+      nombre: '2000000 Views',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Views',
+      descripcion: '2000000 Views to your Tiktok Videos',
+      precio: 50.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok view.png'
+    },
+    
+    // Tiktok Followers (5 productos)
+    {
+      id: 'tiktok-followers-100',
+      nombre: '100 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '100 seguidores reales para tu perfil.',
+      precio: 3.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok follows.png'
+    },
+    {
+      id: 'tiktok-followers-500',
+      nombre: '500 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '500 seguidores reales para tu perfil.',
+      precio: 6.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok follows.png'
+    },
+    {
+      id: 'tiktok-followers-1000',
+      nombre: '1000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '1000 seguidores reales para tu perfil.',
+      precio: 9.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok follows.png'
+    },
+    {
+      id: 'tiktok-followers-5000',
+      nombre: '5000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '5000 seguidores reales para tu perfil.',
+      precio: 13.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok follows.png'
+    },
+    {
+      id: 'tiktok-followers-10000',
+      nombre: '10000 Tiktok Followers',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Followers',
+      descripcion: '10000 seguidores reales para tu perfil.',
+      precio: 20.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok follows.png'
+    },
+    
+    // Instagram Followers (5 productos)
+    {
+      id: 'instagram-followers-100',
+      nombre: '100 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '100 seguidores reales para tu perfil de Instagram.',
+      precio: 3.00 + 0.45,
+      imagen: 'FotosSeverWEB/instgram followers.jpg'
+    },
+    {
+      id: 'instagram-followers-500',
+      nombre: '500 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '500 seguidores reales para tu perfil.',
+      precio: 6.00 + 0.45,
+      imagen: 'FotosSeverWEB/instgram followers.jpg'
+    },
+    {
+      id: 'instagram-followers-1000',
+      nombre: '1000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '1000 seguidores reales para tu perfil.',
+      precio: 9.00 + 0.45,
+      imagen: 'FotosSeverWEB/instgram followers.jpg'
+    },
+    {
+      id: 'instagram-followers-5000',
+      nombre: '5000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '5000 seguidores reales para tu perfil.',
+      precio: 15.00 + 0.45,
+      imagen: 'FotosSeverWEB/instgram followers.jpg'
+    },
+    {
+      id: 'instagram-followers-10000',
+      nombre: '10000 Instagram Followers',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Followers',
+      descripcion: '10000 seguidores reales para tu perfil.',
+      precio: 27.00 + 0.45,
+      imagen: 'FotosSeverWEB/instgram followers.jpg'
+    },
+    
+    // YouTube Subscribers (5 productos)
+    {
+      id: 'youtube-subs-100',
+      nombre: '100 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '100 suscriptores reales para tu canal de YouTube.',
+      precio: 5.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube 100 subs.png'
+    },
+    {
+      id: 'youtube-subs-500',
+      nombre: '500 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '500 suscriptores reales para tu canal.',
+      precio: 6.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube 500 subs.png'
+    },
+    {
+      id: 'youtube-subs-1000',
+      nombre: '1000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '1000 suscriptores reales para tu canal.',
+      precio: 12.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube 1k subssss.png'
+    },
+    {
+      id: 'youtube-subs-5000',
+      nombre: '5000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '5000 suscriptores reales para tu canal.',
+      precio: 20.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube 5k subs.png'
+    },
+    {
+      id: 'youtube-subs-10000',
+      nombre: '10000 YouTube Subscribers',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Subscribers',
+      descripcion: '10000 suscriptores reales para tu canal.',
+      precio: 27.97 + 0.45,
+      imagen: 'FotosSeverWEB/youtube 10k subssss.png'
+    },
+    
+    // YouTube Watch Hours (5 productos)
+    {
+      id: 'youtube-hours-1000',
+      nombre: '500 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '500 horas de visualización para tu canal.',
+      precio: 35.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube hours.png'
+    },
+    {
+      id: 'youtube-hours-4000',
+      nombre: '1000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '1000 horas de visualización (mínimo para monetización).',
+      precio: 60.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube hours.png'
+    },
+    {
+      id: 'youtube-hours-10000',
+      nombre: '2000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '2000 horas de visualización para tu canal.',
+      precio: 95.99 + 0.45,
+      imagen: 'FotosSeverWEB/youtube hours.png'
+    },
+    {
+      id: 'youtube-hours-50000',
+      nombre: '3000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '3000 horas de visualización para tu canal.',
+      precio: 149.00 + 0.45,
+      imagen: 'FotosSeverWEB/youtube hours.png'
+    },
+    {
+      id: 'youtube-hours-100000',
+      nombre: '4000 YouTube Watch Hours',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Watch Hours',
+      descripcion: '40000 horas de visualización para tu canal.',
+      precio: 199.99 + 0.45,
+      imagen: 'FotosSeverWEB/youtube hours.png'
+    },
+    {
+      id: 'tiktok-monetizable-account',
+      nombre: 'TikTok Beta Account Full Verified by 100k views and 10k Followers + Tiktok Shop Program',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Monetizable Account',
+      descripcion: 'Pre-approved TikTok account with monetization option available. Just start posting videos to activate and begin earning!. ACCOUNT WILL BE SENT WITH SAME EMAIL YOU PAYED WITH PAYPAL!',
+      precio: 40.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok monetizable acc.png'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 500 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 3.00 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok likes.png'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 1000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 4.90 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok likes.png'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 2000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 7.87 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok likes.png'
+    },
+    {
+      id: 'tiktok-likes',
+      nombre: 'TikTok 10000 Likes',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Likes',
+      descripcion: 'Tiktok Likes for your videos',
+      precio: 10.92 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok likes.png'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '30 Custom TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 1.13 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok custom comment.png'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '50 Custom TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 2.30 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok custom comment.png'
+    },
+    {
+      id: 'tiktok-comments',
+      nombre: '100 Custom TikTok Comments',
+      categoria: 'Tiktok Services',
+      tipo: 'Tiktok Comments',
+      descripcion: 'Tiktok Comments for your videos',
+      precio: 5.90 + 0.45,
+      imagen: 'FotosSeverWEB/tiktok custom comment.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '100 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 2.00 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '500 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 5.00 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '1000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 8.00 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '5000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 9.98 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '10000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 11.90 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-likes',
+      nombre: '200000 Instagram Likes',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Likes',
+      descripcion: 'Likes for your instagram Post',
+      precio: 19.99 + 0.45,
+      imagen: 'FotosSeverWEB/insta like post.png'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '100 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 1.00 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '1000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 1.29 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '5000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 2.50 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '10000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 5.90 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-reel-views',
+      nombre: '20000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 6.06 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-views',
+      nombre: '50000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 9.99 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-views',
+      nombre: '1000000 Instagram Reel Views',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Views',
+      descripcion: 'Views for your Reels',
+      precio: 19.99 + 0.45,
+      imagen: 'FotosSeverWEB/insta views reel.png'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '100 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 2.30 + 0.45,
+      imagen: 'FotosSeverWEB/insta comments.png'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '300 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 3.76 + 0.45,
+      imagen: 'FotosSeverWEB/insta comments.png'
+    },
+    {
+      id: 'instagram-comments',
+      nombre: '500 Instagram Comments',
+      categoria: 'Instagram Services',
+      tipo: 'Instagram Comments',
+      descripcion: 'Comments for your Reels',
+      precio: 7.00 + 0.45,
+      imagen: 'FotosSeverWEB/insta comments.png'
+    },
+    {
+      id: 'youtube-views-500',
+      nombre: '500 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '500 views for your channel',
+      precio: 7.00 + 0.45,
+      imagen: 'FotosSeverWEB/views.png'
+    },
+    {
+      id: 'youtube-views-1000',
+      nombre: '1000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '1000 views for your channel',
+      precio: 13.09 + 0.45,
+      imagen: 'FotosSeverWEB/views.png'
+    },
+    {
+      id: 'youtube-views-2000',
+      nombre: '2000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '2000 views for your channel',
+      precio: 15.90 + 0.45,
+      imagen: 'FotosSeverWEB/views.png'
+    },
+    {
+      id: 'youtube-views-5000',
+      nombre: '5000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '5000 views for your channel',
+      precio: 20.00 + 0.45,
+      imagen: 'FotosSeverWEB/views.png'
+    },
+    {
+      id: 'youtube-views-10000',
+      nombre: '10000 YouTube Views',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Views',
+      descripcion: '10000 views for your channel',
+      precio: 26.00 + 0.45,
+      imagen: 'FotosSeverWEB/views.png'
+    },
+    {
+      id: 'youtube-likes-500',
+      nombre: '500 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '500 Likes for your youtube Channel',
+      precio: 7.00 + 0.45,
+      imagen: 'FotosSeverWEB/likes.png'
+    },
+    {
+      id: 'youtube-likes-1000',
+      nombre: '1000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '1000 Likes for your youtube Channel',
+      precio: 10.00 + 0.45,
+      imagen: 'FotosSeverWEB/likes.png'
+    },
+    {
+      id: 'youtube-likes-2000',
+      nombre: '2000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '2000 Likes for your youtube Channel',
+      precio: 13.00 + 0.45,
+      imagen: 'FotosSeverWEB/likes.png'
+    },
+    {
+      id: 'youtube-likes-5000',
+      nombre: '5000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '5000 Likes for your youtube Channel',
+      precio: 14.74 + 0.45,
+      imagen: 'FotosSeverWEB/likes.png'
+    },
+    {
+      id: 'youtube-likes-10000',
+      nombre: '10000 Youtube Likes',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Likes',
+      descripcion: '10000 Likes for your youtube Channel',
+      precio: 19.00 + 0.45,
+      imagen: 'FotosSeverWEB/likes.png'
+    },
+    {
+      id: 'youtube-comments-10',
+      nombre: '10 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '10 Custom Comments for your YouTube VIDEO',
+      precio: 2.00 + 0.45,
+      imagen: 'FotosSeverWEB/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png'
+    },
+    {
+      id: 'youtube-comments-20',
+      nombre: '20 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '20 Custom Comments for your YouTube VIDEO',
+      precio: 3.00 + 0.45,
+      imagen: 'FotosSeverWEB/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png'
+    },
+    {
+      id: 'youtube-comments-30',
+      nombre: '30 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '30 Custom Comments for your YouTube VIDEO',
+      precio: 4.00 + 0.45,
+      imagen: 'FotosSeverWEB/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png'
+    },
+    {
+      id: 'youtube-comments-50',
+      nombre: '50 Youtube Custom Comments',
+      categoria: 'YouTube Services',
+      tipo: 'YouTube Comments',
+      descripcion: '50 Custom Comments for your YouTube VIDEO',
+      precio: 5.00 + 0.45,
+      imagen: 'FotosSeverWEB/httpse7.pngegg.compngimages523896png-clipart-youtube-logo-youtube-red-logo-sunny-leone-angle-rectangle-thumbnail.png25.png'
+    },
+  ]
+  
+  // Carrito: Array de objetos {id, cantidad}
+  let carrito = [];
+  let necesitaComentarios = false;
+
+  // Actualizar contador en icono carrito
+  function actualizarContador() {
+    const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    const spanCantidad = document.getElementById('carritoCantidad');
+    if (cantidadTotal > 0) {
+      spanCantidad.style.display = 'inline-block';
+      spanCantidad.textContent = cantidadTotal;
+    } else {
+      spanCantidad.style.display = 'none';
+    }
+  }
+
+  // Mostrar productos en "Más vendidos" o filtrados por categoría/producto
+  function mostrarProductos(filtro = null, valor = null) {
+    const contenedor = document.getElementById('productosMasComprados');
+    const tituloPrincipal = document.getElementById('tituloPrincipal');
+    const categoriaMensaje = document.getElementById('categoriaMensaje');
+    
+    contenedor.innerHTML = '';
+    
+    let productosFiltrados = productos;
+    
+    if (filtro && valor) {
+      if (filtro === 'categoria') {
+        productosFiltrados = productos.filter(p => p.categoria === valor);
+        tituloPrincipal.style.display = 'none';
+        categoriaMensaje.style.display = 'block';
+        categoriaMensaje.textContent = `Productos de ${valor}`;
+      } else if (filtro === 'producto') {
+        productosFiltrados = productos.filter(p => p.tipo === valor);
+        tituloPrincipal.style.display = 'none';
+        categoriaMensaje.style.display = 'block';
+        categoriaMensaje.textContent = valor;
+      }
+    } else {
+      // Mostrar productos destacados por defecto
+      productosFiltrados = productos.filter(p => 
+        p.id === 'twitch-followers-1000' || 
+        p.id === 'spotify-followers-1000' || 
+        p.id === 'instagram-followers-1000' || 
+        p.id === 'youtube-subs-1000' ||
+        p.id === 'twitch-subs-100' ||
+        p.id === 'tiktok-followers-5000' ||
+        p.id === 'instagram-followers-5000' ||
+        p.id === 'youtube-subs-5000' 
+      );
+      tituloPrincipal.style.display = 'block';
+      categoriaMensaje.style.display = 'none';
+    }
+    
+    if (productosFiltrados.length === 0) {
+      contenedor.innerHTML = '<p>No se encontraron productos.</p>';
+      return;
+    }
+    
+    productosFiltrados.forEach(prod => {
+      const div = document.createElement('div');
+      div.className = 'producto';
+      div.innerHTML = `
+        <div class="producto-img-container">
+          <img src="${prod.imagen}" alt="${prod.nombre}" />
+        </div>
+        <div class="info">
+          <h3>${prod.nombre}</h3>
+          <p class="precio">€${prod.precio.toFixed(2)}</p>
+          <p class="descripcion">${prod.descripcion}</p>
+          <button class="btnAñadir" data-id="${prod.id}">Añadir al carrito</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  // Añadir producto al carrito
+  function añadirAlCarrito(id) {
+    const index = carrito.findIndex(item => item.id === id);
+    if (index > -1) {
+      carrito[index].cantidad++;
+    } else {
+      carrito.push({ id, cantidad: 1 });
+    }
+    actualizarContador();
+    mostrarNotificacion('Producto añadido al carrito');
+  }
+
+  // Mostrar notificación
+  function mostrarNotificacion(mensaje) {
+    const notificacionExistente = document.querySelector('.notificacion');
+    if (notificacionExistente) {
+      document.body.removeChild(notificacionExistente);
+    }
+    
+    const notificacion = document.createElement('div');
+    notificacion.className = 'notificacion';
+    notificacion.textContent = mensaje;
+    
+    document.body.appendChild(notificacion);
+    
+    setTimeout(() => {
+      notificacion.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notificacion);
+      }, 500);
+    }, 2000);
+  }
+
+  // Mostrar ventana carrito
+  function mostrarCarrito() {
+    const ventana = document.getElementById('carritoVentana');
+    const lista = document.getElementById('carritoLista');
+    const pedidoForm = document.getElementById('pedidoForm');
+    
+    lista.innerHTML = '';
+    pedidoForm.style.display = 'none';
+
+    if(carrito.length === 0) {
+      lista.innerHTML = '<p>Tu carrito está vacío.</p>';
+    } else {
+      carrito.forEach(item => {
+        const prod = productos.find(p => p.id === item.id);
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="${prod.imagen}" alt="${prod.nombre}" />
+          <div class="detalle">
+            <h4>${prod.nombre}</h4>
+            <span>€${(prod.precio * item.cantidad).toFixed(2)} (${item.cantidad} unidad${item.cantidad > 1 ? 'es' : ''})</span>
+          </div>
+          <button class="btnEliminar" data-id="${prod.id}">✖</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // Actualizar total
+    const total = carrito.reduce((acc, item) => {
+      const prod = productos.find(p => p.id === item.id);
+      return acc + (prod.precio * item.cantidad);
+    }, 0);
+    document.querySelector('#carritoFooter .total').textContent = `Total: €${total.toFixed(2)}`;
+
+    // Mostrar ventana
+    ventana.style.display = 'flex';
+  }
+
+  // Eliminar producto del carrito
+  function eliminarDelCarrito(id) {
+    carrito = carrito.filter(item => item.id !== id);
+    actualizarContador();
+    mostrarCarrito();
+    mostrarNotificacion('Producto eliminado del carrito');
+  }
+
+  // Verificar si el carrito contiene productos que necesitan comentarios
+  function verificarComentariosNecesarios() {
+    const productosComentarios = ['YouTube Comments', 'Tiktok Comments', 'Instagram Comments'];
+    necesitaComentarios = carrito.some(item => {
+      const prod = productos.find(p => p.id === item.id);
+      return productosComentarios.includes(prod.tipo);
+    });
+    
+    const comentariosContainer = document.getElementById('comentariosContainer');
+    if (necesitaComentarios) {
+      comentariosContainer.style.display = 'block';
+    } else {
+      comentariosContainer.style.display = 'none';
+    }
+  }
+
+  // Configurar PayPal
+// Configurar PayPal con notificación a Telegram
+function configurarPayPal() {
+    document.getElementById('paypal-button-container').innerHTML = '';
+    
+    const total = carrito.reduce((acc, item) => {
+      const prod = productos.find(p => p.id === item.id);
+      return acc + (prod.precio * item.cantidad);
+    }, 0);
+
+    const enlaceCanal = document.getElementById('enlaceCanal').value;
+    const comentarios = document.getElementById('comentarios').value;
+    
+    // Crear descripción con los detalles adicionales
+    let descripcion = carrito.map(item => {
+      const prod = productos.find(p => p.id === item.id);
+      return `${prod.nombre} (${item.cantidad} unidad${item.cantidad > 1 ? 'es' : ''})`;
+    }).join(', ');
+    
+    descripcion += `\n\nEnlace del canal: ${enlaceCanal}`;
+    
+    if (necesitaComentarios && comentarios) {
+      descripcion += `\n\nComentarios personalizados:\n${comentarios}`;
+    }
+
+    if (total <= 0) {
+      mostrarNotificacion('El total no puede ser cero');
+      return;
+    }
+
+    try {
+      paypal.Buttons({
+        style: {
+          color: 'blue',
+          shape: 'rect',
+          label: 'pay',
+          height: 40
+        },
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: total.toFixed(2),
+                currency_code: 'EUR',
+                breakdown: {
+                  item_total: {
+                    value: total.toFixed(2),
+                    currency_code: 'EUR'
+                  }
+                }
+              },
+              description: descripcion,
+              items: carrito.map(item => {
+                const prod = productos.find(p => p.id === item.id);
+                return {
+                  name: prod.nombre.substring(0, 127),
+                  unit_amount: {
+                    value: prod.precio.toFixed(2),
+                    currency_code: 'EUR'
+                  },
+                  quantity: item.cantidad.toString()
+                };
+              })
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Notificación a Telegram
+            const mensajeTelegram = `🛒 *NUEVO PEDIDO* 🛒\n` +
+              `💰 *Total:* €${total.toFixed(2)}\n` +
+              `🌐 *Enlace:* ${enlaceCanal}\n` +
+              `📝 *Comentarios:* ${comentarios || 'Ninguno'}\n\n` +
+              `📦 *Productos:*\n${carrito.map(item => {
+                const prod = productos.find(p => p.id === item.id);
+                return `➤ ${prod.nombre} (x${item.cantidad}) - €${(prod.precio * item.cantidad).toFixed(2)}`;
+              }).join('\n')}`;
+
+            fetch(`https://api.telegram.org/bot8040667899:AAFUOEOi8O4auBqSm00UOuefg_DwTnTnBCA/sendMessage?chat_id=6563163563&text=${encodeURIComponent(mensajeTelegram)}&parse_mode=Markdown`)
+              .then(() => mostrarNotificacion('✅ Porfavor Tenga en cuenta que su pedido puede tardar un par de horas o minutos en llegar, depende de la hora y el dia!'))
+              .catch(() => console.log('Error al notificar a Telegram'));
+
+            // Resetear sistema
+            mostrarNotificacion('Pago completado con éxito');
+            carrito = [];
+            actualizarContador();
+            document.getElementById('carritoVentana').style.display = 'none';
+            document.getElementById('paypalModal').style.display = 'none';
+            document.getElementById('pedidoForm').style.display = 'none';
+            document.getElementById('enlaceCanal').value = '';
+            document.getElementById('comentarios').value = '';
+          });
+        },
+        onError: function(err) {
+          console.error('Error PayPal:', err);
+          mostrarNotificacion('Error en el pago. Por favor intenta nuevamente.');
+        }
+      }).render('#paypal-button-container');
+    } catch (error) {
+      console.error('Error al renderizar botones PayPal:', error);
+      mostrarNotificacion('Error al cargar PayPal. Recarga la página.');
+    }
+}
+  // Event listeners
+  document.addEventListener('DOMContentLoaded', () => {
+    // Mostrar productos destacados al cargar
+    mostrarProductos();
+
+    // Menú categorías
+    document.querySelectorAll('.menuCat').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        mostrarProductos('categoria', e.target.dataset.cat);
+      });
+    });
+
+    // Submenú productos
+    document.querySelectorAll('.subProd').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        mostrarProductos('producto', e.target.dataset.prod);
+      });
+    });
+
+    // Logo principal - volver a inicio
+    document.getElementById('logoPrincipal').addEventListener('click', () => {
+      mostrarProductos();
+    });
+
+    // Botón carrito
+    document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
+    document.getElementById('cerrarCarrito').addEventListener('click', () => {
+      document.getElementById('carritoVentana').style.display = 'none';
+    });
+
+    // Añadir al carrito (delegación de eventos)
+    document.getElementById('productosMasComprados').addEventListener('click', (e) => {
+      if (e.target.classList.contains('btnAñadir')) {
+        añadirAlCarrito(e.target.dataset.id);
+      }
+    });
+
+    // Eliminar del carrito (delegación de eventos)
+    document.getElementById('carritoLista').addEventListener('click', (e) => {
+      if (e.target.classList.contains('btnEliminar')) {
+        eliminarDelCarrito(e.target.dataset.id);
+      }
+    });
+
+    // Botón pagar
+    document.getElementById('botonPagar').addEventListener('click', () => {
+      if (carrito.length === 0) {
+        mostrarNotificacion('El carrito está vacío');
+        return;
+      }
+      
+      // Verificar si necesita comentarios
+      verificarComentariosNecesarios();
+      
+      // Mostrar formulario de detalles
+      document.getElementById('pedidoForm').style.display = 'block';
+    });
+
+    // Continuar al pago
+    document.getElementById('continuarPago').addEventListener('click', () => {
+      const enlaceCanal = document.getElementById('enlaceCanal').value;
+      
+      if (!enlaceCanal) {
+        mostrarNotificacion('Por favor ingresa el enlace de tu canal');
+        return;
+      }
+      
+      if (necesitaComentarios && !document.getElementById('comentarios').value) {
+        mostrarNotificacion('Por favor ingresa los comentarios personalizados');
+        return;
+      }
+      
+      document.getElementById('paypalModal').style.display = 'flex';
+      configurarPayPal();
+    });
+
+    // Cerrar modal PayPal
+    document.querySelector('#paypalModal .closeBtn').addEventListener('click', () => {
+      document.getElementById('paypalModal').style.display = 'none';
+      document.getElementById('paypal-button-container').innerHTML = '';
+    });
+  });
+</script>
+</body>
+</html>
